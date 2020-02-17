@@ -9,6 +9,10 @@ var dash = {
   monthlyUsageChart: null,
   usageLogChart: null,
 
+  CostPrefix: "$ ",
+  kWHPriceCents: 28.8229,
+  supplyChargeDailyCents: 103.3263,  
+
   init: function(deviceId) {
     this.deviceId = deviceId;
 
@@ -291,6 +295,8 @@ var dash = {
 
   parseDailyUsageData: function(usageData) {
 
+    var totalUsage = 0;
+    
     // Clear previous data
     dash.dailyUsageChart.data.labels = [];
     dash.dailyUsageChart.data.datasets.forEach(function(dataset) {
@@ -304,8 +310,11 @@ var dash = {
       dash.dailyUsageChart.data.labels.push(day.format('MMM D'));
       dash.dailyUsageChart.data.datasets.forEach(function(dataset) {
         dataset.data.push(('energy_wh' in entry) ? (entry.energy_wh/1000) : entry.energy);
+        totalUsage += ('energy_wh' in entry) ? (entry.energy_wh/1000) : entry.energy;
       });
     });
+
+    $("#du-chart-cost").text(dash.calulateCost(totalUsage.toFixed(4)));
 
     dash.dailyUsageChart.update();
     dash.setDailyUsageStats(usageData);
@@ -319,16 +328,20 @@ var dash = {
 
     var energy = ('energy_wh' in dailyTotal) ? (dailyTotal.energy_wh/1000) : dailyTotal.energy
     $("#total-day").text(energy.toFixed(2));
+    $("#total-day-cost").text(dash.calulateCost(energy.toFixed(4)));
 
     var total = usageData.reduce(function(t, d) {return t + (('energy_wh' in d) ? (d.energy_wh/1000) : d.energy)}, 0);
     var avg = total/usageData.length;
 
     $("#avg-day").text(avg.toFixed(2));
+    $("#avg-day-cost").text(dash.calulateCost(avg.toFixed(4)));
 
   },
 
   parseMonthlyUsageData: function(usageData) {
-    
+  
+    var totalUsage = 0;
+
     // Clear previous data
     dash.monthlyUsageChart.data.labels = [];
     dash.monthlyUsageChart.data.datasets.forEach(function(dataset) {
@@ -342,8 +355,11 @@ var dash = {
       dash.monthlyUsageChart.data.labels.push(month.format('MMM'));
       dash.monthlyUsageChart.data.datasets.forEach(function(dataset) {
         dataset.data.push(('energy_wh' in entry) ? (entry.energy_wh/1000) : entry.energy);
+        totalUsage += ('energy_wh' in entry) ? (entry.energy_wh/1000) : entry.energy;
       });
     });
+
+    $("#mu-chart-cost").text(dash.calulateCost(totalUsage.toFixed(4)));
 
     dash.monthlyUsageChart.update();
     dash.setMonthlyUsageStats(usageData);
@@ -356,11 +372,13 @@ var dash = {
     });
     var energy = ('energy_wh' in monthlyTotal) ? (monthlyTotal.energy_wh/1000) : monthlyTotal.energy
     $("#total-month").text(energy.toFixed(2));
+    $("#total-month-cost").text(dash.calulateCost(energy.toFixed(4)));
 
     var total = usageData.reduce(function(t, m) {return t + (('energy_wh' in m) ? (m.energy_wh/1000) : m.energy)}, 0);
     var avg = total/usageData.length;
 
     $("#avg-month").text(avg.toFixed(2));
+    $("#avg-month-cost").text(dash.calulateCost(avg.toFixed(4)));
   },
 
   refreshPowerState: function(powerState) {
@@ -378,6 +396,14 @@ var dash = {
       $("#uptime").text(moment.duration(powerState.uptime, "seconds").format("d[d] h[h] m[m]", {largest: 2}));
     }
     
+  },
+
+  calulateCost: function(kWHValue) {
+    if(kWHValue !== null && kWHValue > 0) {
+      return dash.CostPrefix + ((kWHValue * dash.kWHPriceCents) / 100).toFixed(2);
+    } else {
+      return dash.CostPrefix + "0";
+    }
   },
 
 };

@@ -87,3 +87,17 @@ footer ul {
       display: inline;
   }
 }
+
+.dollars {
+  padding-left: 5px;
+  color: green;
+  font-size: small;
+  position: absolute;
+  top: 0;
+  right: 5px;
+}
+
+.dollars.chart {
+  top: 11px;
+  right: -10px;
+}
