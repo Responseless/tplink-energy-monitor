@@ -70,7 +70,7 @@ footer ul {
 }
 
 @media (min-width: 1635px) {
-  .col-xl-2,{
+  .col-xl-2 {
     float: left;
   }
   .col-xl-2 {
@@ -100,4 +100,15 @@ footer ul {
 .dollars.chart {
   top: 11px;
   right: -10px;
+}
+
+.side-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-btn {
+  /*position: absolute !important;*/
+  margin-top: 20px;
+  bottom: 0;
 }

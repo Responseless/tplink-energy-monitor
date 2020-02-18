@@ -29,6 +29,12 @@
                   </a>
                 </li>
                 {{/each}}
+                <li class="settings-btn">
+                  <a href="#" data-toggle="modal" data-target="#settingsModal">
+                    <i class="fa fa-cog"></i>
+                    Settings
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -58,6 +64,12 @@
                   </a>
                 </li>
                 {{/each}}
+                <li>
+                  <a href="#" data-toggle="modal" data-target="#settingsModal">
+                    <i class="fa fa-cog"></i>
+                    Settings
+                  </a>
+                </li>
               </ul>
               </div>
               <h1>
@@ -296,9 +308,40 @@
   </div>
   </div>
 
+  <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="settingsModalLabel">Price Settings</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-xs-3">
+                <label for="CostPrefix" class="col-form-label">Cost Prefix ($):</label>
+                <input type="text" class="form-control" id="CostPrefix" value="$">
+              </div>
+              <div class="col-xs-3">
+                <label for="kWHPriceCents" class="col-form-label">kWH Price:</label>
+                <input type="number" class="form-control" id="kWHPriceCents" value="28.8229">
+              </div>
+            </div>
+        </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button id="saveSettings" type="button" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://bernii.github.io/gauge.js/dist/gauge.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-duration-format/2.2.2/moment-duration-format.min.js"></script>
@@ -308,6 +351,25 @@
   <script src="/javascripts/dash.js"></script>
   <script>
     $(document).ready(function () {
+      if (window.localStorage.getItem('kWHPriceCents')) {
+        dash.setCostValues(window.localStorage.getItem('CostPrefix')
+          , window.localStorage.getItem('kWHPriceCents'));
+      }
       dash.init( '{{device.deviceId}}' );
+    });
+
+    $('#saveSettings').on('click', function () {
+      window.localStorage.setItem('CostPrefix', $("#CostPrefix").val());
+      window.localStorage.setItem('kWHPriceCents', $("#kWHPriceCents").val());
+      dash.setCostValues($("#CostPrefix").val(), $("#kWHPriceCents").val());
+      ws.close();
+      $("#settingsModal").modal('hide');
+    });
+
+    $('#settingsModal').on('show.bs.modal', function (e) {
+      if (window.localStorage.getItem('kWHPriceCents')) {
+        $("#CostPrefix").val(window.localStorage.getItem('CostPrefix'));
+        $("#kWHPriceCents").val(window.localStorage.getItem('kWHPriceCents'));
+      }
     });
   </script>

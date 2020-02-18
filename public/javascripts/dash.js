@@ -1,5 +1,6 @@
 var dash = {
   deviceId: null,
+  ws: null,
 
   realtimeGauge: null,
   realtimeTrendChart: null,
@@ -9,9 +10,8 @@ var dash = {
   monthlyUsageChart: null,
   usageLogChart: null,
 
-  CostPrefix: "$ ",
+  CostPrefix: "$",
   kWHPriceCents: 28.8229,
-  supplyChargeDailyCents: 103.3263,  
 
   init: function(deviceId) {
     this.deviceId = deviceId;
@@ -30,8 +30,9 @@ var dash = {
   },
 
   initWsConnection: function() {
+
     var wsUri = 'ws://' + window.location.host + '/ws'
-    var ws = new WebSocket(wsUri);
+    ws = new WebSocket(wsUri);
     ws.onopen = function () {
       console.log('Websocket connection established');
       $('#connection-error').hide(200);
@@ -50,6 +51,8 @@ var dash = {
       $('#connection-error').show();
       setTimeout(dash.initWsConnection, 2000);
     }
+
+    this.ws = ws;
   },
 
   wsMessageHandler: function(messageEvent) {
@@ -400,10 +403,15 @@ var dash = {
 
   calulateCost: function(kWHValue) {
     if(kWHValue !== null && kWHValue > 0) {
-      return dash.CostPrefix + ((kWHValue * dash.kWHPriceCents) / 100).toFixed(2);
+      return this.CostPrefix + " " + ((kWHValue * this.kWHPriceCents) / 100).toFixed(2);
     } else {
-      return dash.CostPrefix + "0";
+      return this.CostPrefix + " 0";
     }
+  },
+
+  setCostValues: function(CostPrefix, kWHPriceCents) {
+    this.CostPrefix = CostPrefix
+    this.kWHPriceCents = kWHPriceCents
   },
 
 };
