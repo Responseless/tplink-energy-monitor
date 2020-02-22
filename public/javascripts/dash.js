@@ -32,20 +32,20 @@ var dash = {
   initWsConnection: function() {
 
     var wsUri = 'ws://' + window.location.host + '/ws'
-    this.ws = new WebSocket(wsUri);
-    this.ws.onopen = function () {
+    dash.ws = new WebSocket(wsUri);
+    dash.ws.onopen = function () {
       console.log('Websocket connection established');
       $('#connection-error').hide(200);
-      this.ws.send(JSON.stringify(
+      dash.ws.send(JSON.stringify(
         {
           requestType: 'getCachedData',
           deviceId: dash.deviceId
         }
       ));
     }
-    this.ws.onmessage = dash.wsMessageHandler;
+    dash.ws.onmessage = dash.wsMessageHandler;
 
-    this.ws.onclose = function() {
+    dash.ws.onclose = function() {
       // Usually caused by mobile devices going to sleep or the user minimising the browser app.
       // The setTimeout will begin once the device wakes from sleep or the browser regains focus.
       $('#connection-error').show();
