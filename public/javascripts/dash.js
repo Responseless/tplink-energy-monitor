@@ -32,32 +32,30 @@ var dash = {
   initWsConnection: function() {
 
     var wsUri = 'ws://' + window.location.host + '/ws'
-    ws = new WebSocket(wsUri);
-    ws.onopen = function () {
+    this.ws = new WebSocket(wsUri);
+    this.ws.onopen = function () {
       console.log('Websocket connection established');
       $('#connection-error').hide(200);
-      ws.send(JSON.stringify(
+      this.ws.send(JSON.stringify(
         {
           requestType: 'getCachedData',
           deviceId: dash.deviceId
         }
       ));
     }
-    ws.onmessage = dash.wsMessageHandler;
+    this.ws.onmessage = dash.wsMessageHandler;
 
-    ws.onclose = function() {
+    this.ws.onclose = function() {
       // Usually caused by mobile devices going to sleep or the user minimising the browser app.
       // The setTimeout will begin once the device wakes from sleep or the browser regains focus.
       $('#connection-error').show();
       setTimeout(dash.initWsConnection, 2000);
     }
-
-    this.ws = ws;
   },
 
   wsMessageHandler: function(messageEvent) {
     let message = JSON.parse(messageEvent.data);
-    if(message.deviceId === dash.deviceId) {
+    if(message.deviceId === dash.deviceId && message.data !== undefined) {
       if(message.dataType === 'realtimeUsage') {
         dash.refreshRealtimeDisplay(message.data);
       }
