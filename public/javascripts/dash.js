@@ -326,11 +326,11 @@ var dash = {
     var dailyTotal = usageData.find(function(d) {
       return d.day === moment().date() && d.month === (moment().month()+1) && d.year === moment().year()
     });
-
-    var energy = ('energy_wh' in dailyTotal) ? (dailyTotal.energy_wh/1000) : dailyTotal.energy
-    $("#total-day").text(energy.toFixed(2));
-    $("#total-day-cost").text(dash.calulateCost(energy.toFixed(4)));
-
+    if (dailyTotal !== undefined) {
+      var energy = ('energy_wh' in dailyTotal) ? (dailyTotal.energy_wh/1000) : dailyTotal.energy
+      $("#total-day").text(energy.toFixed(2));
+      $("#total-day-cost").text(dash.calulateCost(energy.toFixed(4)));
+    }
     var total = usageData.reduce(function(t, d) {return t + (('energy_wh' in d) ? (d.energy_wh/1000) : d.energy)}, 0);
     var avg = total/usageData.length;
 
