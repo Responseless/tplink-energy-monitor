@@ -12,19 +12,20 @@
     "dist": "pkg . --out-path ./dist"
   },
   "dependencies": {
-    "cookie-parser": "^1.4.4",
-    "debug": "~4.1.1",
+    "cookie-parser": "^1.4.5",
+    "debug": "~4.3.1",
     "express": "^4.17.1",
     "express-ws": "4.0.0",
     "hbs": "^4.1.2",
-    "http-errors": "^1.7.3",
-    "moment": "2.24.0",
-    "morgan": "^1.9.1",
-    "shelljs": "0.8.3",
-    "tplink-smarthome-api": "~2.0.0"
+    "http-errors": "^1.8.0",
+    "moment": "2.29.1",
+    "morgan": "^1.10.0",
+    "node-notifier": "^10.0.0",
+    "shelljs": "0.8.4",
+    "tplink-smarthome-api": "~3.3.0"
   },
   "devDependencies": {
-    "pkg": "4.4.3"
+    "pkg": "5.2.1"
   },
   "bin": {
     "tplink-monitor": "./app.js"
