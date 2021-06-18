@@ -1,6 +1,6 @@
 {
   "name": "tplink-monitor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An energy monitoring dashboard for TP-Link smart plugs",
   "repository": "https://github.com/jamesbarnett91/tplink-monitor",
   "license": "GPL-3.0",
@@ -15,7 +15,7 @@
     "cookie-parser": "^1.4.5",
     "debug": "~4.3.1",
     "express": "^4.17.1",
-    "express-ws": "4.0.0",
+    "express-ws": "^5.0.0",
     "hbs": "^4.1.2",
     "http-errors": "^1.8.0",
     "moment": "2.29.1",
